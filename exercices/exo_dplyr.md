@@ -34,7 +34,18 @@ La base de données WildFinder du WWF contient des données de présence/absence
 
 ```r
 #read wildfinder-ecoregions_species.csv
-#sp_eco <- datatoolboxexos::data_sp_eco()
+sp_eco <- datatoolboxexos::data_ecoregions_mammals()
+```
+
+```
+## Parsed with column specification:
+## cols(
+##   ecoregion_id = col_character(),
+##   species_id = col_double()
+## )
+```
+
+```r
 #cannot do that because could not do the doc and so the package
 #so I used directly source
 sp_eco <- data_ecoregions_mammals()

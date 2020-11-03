@@ -439,8 +439,13 @@ summary {
 <li>Histogramme de la distribution du nombre d’espèces de mammifères par écorégion.</li>
 </ul>
 <pre class="r"><code>#read wildfinder-ecoregions_species.csv
-#sp_eco &lt;- datatoolboxexos::data_sp_eco()
-#cannot do that because could not do the doc and so the package
+sp_eco &lt;- datatoolboxexos::data_ecoregions_mammals()</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   ecoregion_id = col_character(),
+##   species_id = col_double()
+## )</code></pre>
+<pre class="r"><code>#cannot do that because could not do the doc and so the package
 #so I used directly source
 sp_eco &lt;- data_ecoregions_mammals()</code></pre>
 <pre><code>## Parsed with column specification:

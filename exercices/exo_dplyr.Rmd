@@ -37,7 +37,7 @@ La base de données WildFinder du WWF contient des données de présence/absence
 
 ```{r explo_histo}
 #read wildfinder-ecoregions_species.csv
-#sp_eco <- datatoolboxexos::data_sp_eco()
+sp_eco <- datatoolboxexos::data_ecoregions_mammals()
 #cannot do that because could not do the doc and so the package
 #so I used directly source
 sp_eco <- data_ecoregions_mammals()
