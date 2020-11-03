@@ -1,0 +1,5 @@
+rrtools::use_compendium("../datatoolboxexos", open=FALSE)
+usethis::use_r("data_wildfinder")
+usethis::use_package("here")
+usethis::use_package("readr")
+rrtools::use_readme_rmd()
