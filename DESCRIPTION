@@ -15,4 +15,13 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
     here,
-    readr
+    readr,
+    magrittr,
+    dplyr,
+    fishualize,
+    ggplot2,
+    forcats,
+    sf,
+    drake,
+    visNetwork
+

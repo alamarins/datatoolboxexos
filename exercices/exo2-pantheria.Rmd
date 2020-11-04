@@ -1,0 +1,134 @@
+---
+title: "Exo2-Pantheria"
+author: "Amaïa Lamarins"
+date: "11/4/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Tidy the dataset
+```{r}
+#pantheria <- readr::read_delim(here::here("data/pantheria-traits/PanTHERIA_1-0_WR05_Aug2008.txt"), delim="\t")
+pantheria <- datatoolboxexos::data_pantheria()
+##normalement, aurait du utiliser une fonction se trouvant dossier R ## ca y est !!
+
+#transform MSW05order et msw05family in factors
+#Rename columns 5-1_AdultBodyMass_g, 7-1_DispersalAge_d, 9-1_GestationLen_d, 22-2_HomeRange_Indiv_km2, 16-1_LittersPerYear, 17-1_MaxLongevity_m as you see fit
+dat <- pantheria %>%
+  dplyr::mutate(                                    # Conversion de type
+    order   = as_factor(MSW05_Order),
+    family  = as_factor(MSW05_Family)
+  ) %>%
+  dplyr::rename(                                    # Nom des colonnes
+    adult_bodymass = `5-1_AdultBodyMass_g`,
+    dispersal_age  = `7-1_DispersalAge_d`,
+    gestation      = `9-1_GestationLen_d`,
+    homerange      = `22-2_HomeRange_Indiv_km2`,
+    litter_size    = `16-1_LittersPerYear`,
+    longevity      = `17-1_MaxLongevity_m`
+  )
+
+#clean les noms de colonnes
+pantheria %>%
+  dplyr::mutate(                                    # Conversion de type
+    order   = as_factor(MSW05_Order),
+    family  = as_factor(MSW05_Family)
+  ) %>% janitor::clean_names()
+#Select a few columns for convenience, and at least: family, order, longevity, home range and litter size
+#Replace -999 by NA (hint: check out na_if() function)
+dat <- dat %>%
+  dplyr::select(                                    # Sélection de colonnes
+    order,
+    family,
+    adult_bodymass,
+    dispersal_age,
+    gestation,
+    homerange,
+    litter_size,
+    longevity
+  ) %>%
+  
+  dplyr::na_if(-999)                                # Conversion des NA
+
+#Print out the dataset
+dat
+```
+
+# Data exploration
+```{r}
+#How many observations in family? In order?
+dat %>%
+  dplyr::count(order)
+dat %>%
+  dplyr::count(family)
+#What is the mean home range by family? Standard deviation? The sample size?
+dat %>%
+  dplyr::filter(!is.na(homerange)) %>%
+  dplyr::group_by(family) %>%
+  dplyr::summarise(m=mean(homerange), sd=sd(homerange),n=dplyr::n())
+
+```
+
+#Graph1: bar chart of the number of entries per family
+```{r}
+#Group by family, and select only those with more than 100 observations.
+dat %>%
+  dplyr::group_by(family) %>% # group by family
+  dplyr::mutate(n = dplyr::n()) %>% # calculate number of entries per family
+  dplyr::filter(n > 100)
+#Make a bar chart of the number of observations per family. Order the bars by increasing number of observations.
+dat %>%
+  dplyr::group_by(family) %>% # group by family
+  dplyr::mutate(n = dplyr::n()) %>% # calculate number of entries per family
+  dplyr::filter(n > 100) %>% # select only the families with more than 100 entries
+  ggplot2::ggplot() +
+  aes(x = fct_reorder(family, n), y = n) + # order bars
+  geom_col() +
+  coord_flip() + # flip the bar chart
+  xlab("Family") + # add label for X axis
+  ylab("Counts") + # add label for Y axis
+  ggtitle("Number of entries per family") # add title
+#Add a title and labels to the X and Y axes.
+```
+
+# Scatter plot of litter size as a function of longevity
+```{r}
+#Filter out missing values in both litter size and longevity
+dat %>%
+  dplyr::filter(!is.na(litter_size), !is.na(longevity)) %>%
+  dplyr::group_by(family) %>% # group by family
+  dplyr::mutate(n = dplyr::n()) %>% # count the number of entries per family
+  dplyr::mutate(longevity = longevity / 12) %>% # Change month to year
+  dplyr::filter(n > 10) # select only those families with more than 50 entries
+#Group by family, and select only those with more than 50 observations.
+
+#Make a scatter plot of litter size as a function of longevity.
+dat %>%
+  dplyr::filter(!is.na(litter_size), !is.na(longevity)) %>%
+  dplyr::group_by(family) %>% # group by family
+  dplyr::mutate(n = dplyr::n()) %>% # count the number of entries per family
+  dplyr::mutate(longevity = longevity / 12) %>% # Change month to year
+  dplyr::filter(n > 10) %>% # select only those families with more than 50 entries
+  ggplot2::ggplot() +
+  aes(x = longevity, y = litter_size, col = family) + # scatter plot
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) + # se = TRUE to add confidence intervals
+  xlab("Longevity") + # add label for X axis
+  ylab("Litter size") + # add label for Y axis
+  ggtitle("Scatterplot") + # add title
+  facet_wrap(~ family, nrow = 3) # split in several panels,
+                                 # one for each family
+                                 # remove scale = 'free' for
+                                 # same scale for all plots
+#Add a linear regression fit for each family.
+
+#Split the plot in several scatter plots, one for each family.
+
+#Add a title and labels to the X and Y axes.
+```
+
