@@ -23,5 +23,6 @@ Imports:
     forcats,
     sf,
     drake,
-    visNetwork
+    visNetwork,
+    rnaturalearth
 

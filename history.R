@@ -43,3 +43,5 @@ usethis::use_build_ignore("make.R")
 usethis::use_git_ignore(".drake")
 usethis::use_build_ignore("output/")
 usethis::use_build_ignore("text/")
+#create file plot in R folder to create plot automatically by the plan
+usethis::use_r(name = "plot.R")
